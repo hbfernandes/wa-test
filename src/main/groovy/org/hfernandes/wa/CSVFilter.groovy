@@ -14,7 +14,6 @@ class CSVFilter{
 
     /**
      * Build the column index with the header
-     * @param headers
      */
     private void processHeader(List headers){
         headers.eachWithIndex{ String header, int i ->
@@ -29,7 +28,6 @@ class CSVFilter{
 
     /**
      * Process a line for min/max variable values
-     * @param line
      */
     private void processLine(List line){
         // Decision rows have value '1'
@@ -46,11 +44,7 @@ class CSVFilter{
      * Check if a line should be included in the result. Line is included if one is true:
      * - It's the header
      * - Decision column has value '1'
-     * - At least one of the variables in within it's min/max range
-     *
-     * @param line
-     * @param lnumber
-     * @return
+     * - At least one of the variables in this line is within it's min/max range
      */
     private boolean includeLine(List line, int lnumber){
         lnumber == 1 ||
@@ -61,20 +55,11 @@ class CSVFilter{
         }
     }
 
-    /**
-     * Parse a line into a list of values
-     * @param line
-     * @return
-     */
     private List parseLine(String line){
         line?.split(',')*.trim()
     }
 
-    /**
-     * Process the csv returning a list of filtered rows
-     * @return
-     */
-    List process(){
+    private void process(){
         csv.eachLine { String line, int lnumber ->
             List parsedLine = parseLine(line)
 
@@ -85,7 +70,9 @@ class CSVFilter{
 
             processLine(parsedLine)
         }
+    }
 
+    private List result(){
         List output = []
         csv.eachLine { String line, int lnumber ->
             List parsedLine = parseLine(line)
@@ -97,8 +84,15 @@ class CSVFilter{
         output
     }
 
-
+    /**
+     * Filter the records of the given CSV file removing
+     * the ones that do not match the criteria.
+     * @param csv   numeric csv file with 'id', 'decision' and 'var' headers
+     * @return      list of data rows for rendering
+     */
     static List filter(File csv){
-        new CSVFilter(csv).process()
+        CSVFilter filter = new CSVFilter(csv)
+        filter.process()
+        filter.result()
     }
 }
