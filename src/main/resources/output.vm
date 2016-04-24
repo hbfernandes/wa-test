@@ -1,0 +1,17 @@
+<html>
+<head>
+    <h1>CSV Filter</h1>
+</head>
+<body>
+    <p><a href="/">&lt;&lt; back</a></p>
+    <table>
+        #foreach( $line in $data )
+        <tr>
+            #foreach( $cell in $line )
+            <td>$cell</td>
+            #end
+        </tr>
+        #end
+    </table>
+</body>
+</html>
